@@ -1,0 +1,64 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: basicTo-do_app
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    networks:
+      - basicTo-do
+
+
+  db:
+    image: mysql:8.0
+    container_name: basicTo-do_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: basicTo-do
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - basicTo-do
+
+  node:
+    image: node:22
+    container_name: basicTo-do_node
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - /var/www/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -c "corepack enable && pnpm install && pnpm run dev -- --host 0.0.0.0 --port 5173"
+    networks:
+      - basicTo-do
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: basicTo-do_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      TMPDIR: /tmp
+    depends_on:
+      - db
+    networks:
+      - basicTo-do
+
+networks:
+  basicTo-do:
+
+volumes:
+  dbdata:
