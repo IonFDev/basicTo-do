@@ -29,7 +29,13 @@ class TaskController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'description' => 'nullable',
+        ]);
+
+        Task::create($request->all());
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -37,7 +43,7 @@ class TaskController
      */
     public function show(Task $task)
     {
-        return view('tasks.show', compact('task'));
+        return view('tasks.index', compact('task'));
     }
 
     /**
