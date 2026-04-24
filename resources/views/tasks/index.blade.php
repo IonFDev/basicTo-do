@@ -13,7 +13,14 @@
                     <h2 class="text-xl font-semibold inline">{{ $task->title }}</h2>
                     
                     <button class="inline"><a href="{{ route('tasks.edit', $task) }}">Editar</a></button>
-                    <button class="inline"><a href="{{ route('tasks.destroy', $task) }}">Borrar</a></button>
+                    <form action="{{ route('tasks.destroy', $task) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" class="text-red-500">
+                            Borrar
+                        </button>
+                    </form>
     
                     <p class="text-gray-500">{{ $task->description }}</p>
     
