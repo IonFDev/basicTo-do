@@ -59,7 +59,23 @@ class TaskController
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'description' => 'nullable',
+        ]);
+
+        $task->update($request->all());
+        return redirect()->route('tasks.index');
+    }
+
+    /**
+    * Toggle the completion status of the specified resource.
+    */
+    public function toggle(Task $task)
+    {   
+        $task->is_completed = !$task->is_completed;
+        $task->save();
+        return redirect()->route('tasks.index');
     }
 
     /**
