@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\TaskController;
+use Illuminate\Routing\Controller;    
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('tasks.index');
-});
-Route::resource('tasks', 'TaskController');
+Route::get('/', [TaskController::class, 'index'])->name('tasks.index');
+Route::resource('tasks', TaskController::class);
